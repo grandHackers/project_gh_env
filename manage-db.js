@@ -5,8 +5,12 @@ function start(config) {
     console.log("Starting mongo service...");
  
     var run_cmd = util.format(
-        "docker run -d --name %s -p %d:27017 -v %s:/data/db yoon01/mongo:latest; ",
-        config.name, config.port, config.path
+        "docker run -d --name %s -p %d:%d -v %s:%s yoon01/mongo:latest; ",
+        config.name, 
+        config.hostPort, 
+        config.containerPort, 
+        config.hostDirPath,
+        config.containerDirPath
     );
     
     var log_cmd = util.format(
@@ -24,7 +28,8 @@ function start(config) {
     }
 }
 
-function stop(name) {
+function stop(config) {
+    var name = config.name;
     // stops the db with the container name
     console.log("Stopping the db (docker container name '%s')", name); 
     try {
@@ -35,7 +40,8 @@ function stop(name) {
     }
 }
 
-function remove(name) {
+function remove(config) {
+    var name = config.name;    
     console.log("Removing the db (docker container '%s')", name);
     try {
         execSync('docker rm ' + name, {stdio: [0, 1, 2]});
@@ -45,7 +51,8 @@ function remove(name) {
     }
 }
 
-function restart(name) {
+function restart(config) {
+    var name = config.name    
     // Restarts the db container as long as it wasn't removed.
     console.log("Restarting the db (docker container '%s')", name);
     try {
@@ -55,6 +62,41 @@ function restart(name) {
         console.log(error);
     }
 }
+
+var commandLineArgs = require('command-line-args');
+
+function main() {
+    // parse command line args:
+    // command: start, stop, restart
+    // and flag --config for config path -> ./config/app-config.js    
+
+    // TODO replace current argParsing library with something that has this feature
+    var cli = commandLineArgs([
+        { name: 'command', type: String },
+        { name: 'config-file-path', type: String } ]);
+    
+    var options = cli.parse()
+    var configPath = options['config-file-path'];
+    if (!configPath) {
+        throw Error("Need to provide path to the config file!")
+    }
+    var config = require(configPath);
+    
+    var commandMap = {
+        start: start,
+        stop: stop,
+        restart: restart,
+        remove: remove
+    };
+    var cmd = options['command'];
+    if (! (cmd in commandMap) ) {
+        throw Error("Provide a valid command: start, stop, restart, or remove.");
+    }     
+    commandMap[cmd](config);
+}
+main();
+
+
 
 module.exports = {
     start: start,

@@ -1,6 +1,9 @@
 var util = require('util');
 var execSync = require('child_process').execSync
 
+// read app config from some config file
+
+
 function start(config) {
     // docker run -d --name mongo -p 27018:27017 -v /data/db:/data/db yoon01/mongo:latest
     // docker run --name blog -p 8080:8080 --link mongo -it yoon01/blog:latest bash
@@ -11,20 +14,23 @@ function start(config) {
     // source cmd; git clone, checkout and npm install
     // note this gets the latest commit of the specified branch
     var source_setup_cmd = util.format(
-        "echo $MONGO_PORT; " + // FOR DEBUGGING 
         "git pull; " +  
         "git checkout %s;" + 
         "npm update 2>&1; " +
         'npm start -- --db-address $%s_PORT_27017_TCP_ADDR', 
-        config.branch, config.link.toUpperCase()); 
+        config.branch, 
+        config.link.toUpperCase()); 
     
     
     // Spin up docker container
     var run_cmd = util.format(
-        "docker run -d --name blog -p %d:8080 " +  
+        "docker run -d --name blog -p %d:%d " +  
         "--link %s yoon01/blog:latest " + 
         "/bin/bash -c '%s'; ",
-        config.port, config.link, source_setup_cmd);
+        config.hostPort,
+        config.containerPort, 
+        config.link, 
+        source_setup_cmd);
     
     // redirect stdout inside container to host stdout and to a log file
     var log_cmd = util.format(
@@ -43,7 +49,8 @@ function start(config) {
     }   
 }
 
-function stop(name) {
+function stop(config) {
+    var name = config.name;
     // stops the app with the container name
     console.log("Stopping the app (docker container name '%s')", name); 
     try {
@@ -54,7 +61,8 @@ function stop(name) {
     }
 }
 
-function remove(name) {
+function remove(config) {
+    var name = config.name;
     console.log("Removing the app (docker container '%s')", name);
     try {
         execSync('docker rm ' + name, {stdio: [0, 1, 2]});
@@ -64,7 +72,8 @@ function remove(name) {
     }
 }
 
-function restart(name) {
+function restart(config) {
+    var name = config.name;
     // Restarts the app container as long as it wasn't removed.
     console.log("Restarting the app (docker container '%s')", name);
     try {
@@ -74,6 +83,40 @@ function restart(name) {
         console.log(error);
     }
 }
+
+var commandLineArgs = require('command-line-args');
+
+function main() {
+    // parse command line args:
+    // command: start, stop, restart
+    // and flag --config for config path -> ./config/app-config.js    
+
+    // TODO replace current argParsing library with something that has this feature
+    var cli = commandLineArgs([
+        { name: 'command', type: String },
+        { name: 'config-file-path', type: String } ]);
+    
+    var options = cli.parse()
+    var configPath = options['config-file-path'];
+    if (!configPath) {
+        throw Error("Need to provide path to the config file!")
+    }
+    var config = require(configPath);
+    
+    var commandMap = {
+        start: start,
+        stop: stop,
+        restart: restart,
+        remove: remove
+    };
+    var cmd = options['command'];
+    if (! (cmd in commandMap) ) {
+        throw Error("Provide a valid command: start, stop, restart, or remove.");
+    }     
+    commandMap[cmd](config);
+}
+
+main();
 
 
 module.exports = {
