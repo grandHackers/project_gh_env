@@ -43,6 +43,42 @@ function start(config) {
     }   
 }
 
+function stop(name) {
+    // stops the app with the container name
+    console.log("Stopping the app (docker container name '%s')", name); 
+    try {
+        execSync('docker stop ' + name, {stdio: [0, 1, 2]});        
+    } catch(error) {
+        console.log("Error raised when stopping the app '%s' ", name);
+        console.log(error);
+    }
+}
+
+function remove(name) {
+    console.log("Removing the app (docker container '%s')", name);
+    try {
+        execSync('docker rm ' + name, {stdio: [0, 1, 2]});
+    } catch(error) {
+        console.log("Error raised when removing the app '%s' ", name);
+        console.log(error);
+    }
+}
+
+function restart(name) {
+    // Restarts the app container as long as it wasn't removed.
+    console.log("Restarting the app (docker container '%s')", name);
+    try {
+        execSync('docker restart ' + name, {stdio: [0, 1, 2]});
+    } catch(error) {
+        console.log("Error raised when restarting the app '%s' ", name);
+        console.log(error);
+    }
+}
+
+
 module.exports = {
-    start: start   
+    start: start,
+    stop: stop,
+    restart: restart,
+    remove: remove
 };

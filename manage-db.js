@@ -24,6 +24,41 @@ function start(config) {
     }
 }
 
-module.exports = {
-    start: start
+function stop(name) {
+    // stops the db with the container name
+    console.log("Stopping the db (docker container name '%s')", name); 
+    try {
+        execSync('docker stop ' + name, {stdio: [0, 1, 2]});        
+    } catch(error) {
+        console.log("Error raised when stopping the db '%s' ", name);
+        console.log(error);
+    }
 }
+
+function remove(name) {
+    console.log("Removing the db (docker container '%s')", name);
+    try {
+        execSync('docker rm ' + name, {stdio: [0, 1, 2]});
+    } catch(error) {
+        console.log("Error raised when removing the db '%s' ", name);
+        console.log(error);
+    }
+}
+
+function restart(name) {
+    // Restarts the db container as long as it wasn't removed.
+    console.log("Restarting the db (docker container '%s')", name);
+    try {
+        execSync('docker restart ' + name, {stdio: [0, 1, 2]});
+    } catch(error) {
+        console.log("Error raised when restarting the db '%s' ", name);
+        console.log(error);
+    }
+}
+
+module.exports = {
+    start: start,
+    stop: stop,
+    restart: restart,
+    remove: remove
+};
