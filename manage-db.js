@@ -5,12 +5,13 @@ function start(config) {
     console.log("Starting mongo service...");
  
     var run_cmd = util.format(
-        "docker run -d --name %s -p %d:%d -v %s:%s yoon01/mongo:latest; ",
+        "docker run -d --name %s -p %d:%d -v %s:%s %s; ",
         config.name, 
         config.hostPort, 
         config.containerPort, 
         config.hostDirPath,
-        config.containerDirPath
+        config.containerDirPath,
+	config.tag
     );
     
     var log_cmd = util.format(

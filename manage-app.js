@@ -25,11 +25,12 @@ function start(config) {
     // Spin up docker container
     var run_cmd = util.format(
         "docker run -d --name blog -p %d:%d " +  
-        "--link %s yoon01/blog:latest " + 
+        "--link %s %s " + 
         "/bin/bash -c '%s'; ",
         config.hostPort,
         config.containerPort, 
         config.link, 
+	config.tag,
         source_setup_cmd);
     
     // redirect stdout inside container to host stdout and to a log file

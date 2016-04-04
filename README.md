@@ -1,6 +1,6 @@
 # project_gh_env
 
-1) Pull images, yoon01/ubuntu-base:latest, yoon01/blog:latest, yoon01/mongo:latest from docker hub  
+1) Pull images, grandhackers/ubuntu-base:latest, grandhackers/blog:latest, grandhackers/mongo:latest from docker hub  
 (To build each one, just run `docker build <repo/tag:version> <path-to-directory-of-the-Dockerfile>`.  
 for building the 'blog' image, just run the script `node build-app-image.js`)
 
