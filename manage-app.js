@@ -86,7 +86,7 @@ function restart(config) {
 
 var commandLineArgs = require('command-line-args');
 
-function main() {
+if (!module.parent) {
     // parse command line args:
     // command: start, stop, restart
     // and flag --config for config path -> ./config/app-config.js    
@@ -94,10 +94,10 @@ function main() {
     // TODO replace current argParsing library with something that has this feature
     var cli = commandLineArgs([
         { name: 'command', type: String },
-        { name: 'config-file-path', type: String } ]);
+        { name: 'config-path', type: String } ]);
     
     var options = cli.parse()
-    var configPath = options['config-file-path'];
+    var configPath = options['config-path'];
     if (!configPath) {
         throw Error("Need to provide path to the config file!")
     }
@@ -115,8 +115,6 @@ function main() {
     }     
     commandMap[cmd](config);
 }
-
-main();
 
 
 module.exports = {

@@ -8,7 +8,19 @@
   },
   "devDependencies": {},
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node manage-services.js --command start --app-config-path ./config/app-config.js --db-config-path ./config/db-config.js",
+    "stop": "node manage-services.js --command stop --app-config-path ./config/app-config.js --db-config-path ./config/db-config.js",
+    "restart": "node manage-services.js --command restart --app-config-path ./config/app-config.js --db-config-path ./config/db-config.js",
+    "remove": "node manage-services.js --command remove --app-config-path ./config/app-config.js --db-config-path ./config/db-config.js",
+    "start:app": "node manage-app.js --command start --config-path ./config/app-config.js",
+    "stop:app": "node manage-app.js --command stop --config-path ./config/app-config.js",
+    "restart:app": "node manage-app.js --command restart --config-path ./config/app-config.js",
+    "remove:app": "node manage-app.js --command remove --config-path ./config/app-config.js",
+    "start:db": "node manage-db.js --command start --config-path ./config/db-config.js",
+    "stop:db": "node manage-db.js --command stop --config-path ./config/db-config.js",
+    "restart:db": "node manage-db.js --command restart --config-path ./config/db-config.js",
+    "remove:db": "node manage-db.js --command remove --config-path ./config/db-config.js"
   },
   "repository": {
     "type": "git",
