@@ -10,14 +10,14 @@ function start(config) {
     );
     
     var log_cmd = util.format(
-        "docker logs --follow %s | tee log_%s.txt", 
+        "docker logs --follow %s > log_%s.txt &", 
         config.name, config.name);
     
     var cmd = run_cmd + log_cmd;
     
     console.log("Running `%s`", cmd); 
     try {
-        var res = execSync(cmd);
+        var res = execSync(cmd, {stdio: [0, 1, 2]});
         //console.log(res.toString());         
     } catch(error) {
         console.log(error);
