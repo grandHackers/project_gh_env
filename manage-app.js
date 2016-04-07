@@ -15,10 +15,11 @@ function start(config) {
     // note this gets the latest commit of the specified branch
     var source_setup_cmd = util.format(
         "git pull; " +  
-        "git checkout %s;" + 
+        "git checkout %s; " + 
         "npm update 2>&1; " +
         "echo updating server ip to %s; " +
-        "echo \"export default { API_URL: \"http://%s:%s\" } \" > config/client-config.js; " + 
+        // echo' "'"'export default { API_URL: "http://localhost:8080" }'"'" '> config/client-config.js';
+        "echo' \"'\"\'export default { API_URL: \"http://%s:%s\" }'\"'\" '> config/client-config.js';" + 
         'npm start -- --db-address $%s_PORT_27017_TCP_ADDR', 
         config.branch,  // git checkout branch
         config.hostIP, // echo server ip to hostIP
@@ -34,7 +35,7 @@ function start(config) {
         config.hostPort,
         config.containerPort, 
         config.link, 
-	config.tag,
+	    config.tag,
         source_setup_cmd);
     
     // redirect stdout inside container to host stdout and to a log file
