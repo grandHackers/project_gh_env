@@ -5,6 +5,10 @@ var execSync = require('child_process').execSync
 
 
 function start(config) {
+    
+    // write the pre-setup stuff into a file
+    // just make node 
+    
     // docker run -d --name mongo -p 27018:27017 -v /data/db:/data/db yoon01/mongo:latest
     // docker run --name blog -p 8080:8080 --link mongo -it yoon01/blog:latest bash
     // docker run -d --name blog -p 8080:8080 --link mongo yoon01/blog:latest /bin/bash -c 'npm start -- --db-address $MONGO_PORT_27017_TCP_ADDR' 
@@ -18,9 +22,8 @@ function start(config) {
         "git checkout %s; " + 
         "npm update 2>&1; " +
         "echo updating server ip to %s; " +
-        // echo' "'"'export default { API_URL: "http://localhost:8080" }'"'" '> config/client-config.js';
-        "echo' \"'\"\'export default { API_URL: \"http://%s:%s\" }'\"'\" '> config/client-config.js';" + 
-        'npm start -- --db-address $%s_PORT_27017_TCP_ADDR', 
+        'echo export default { API_URL: \\"http://%s:%s\\" } > config/client-config.js; ' +
+        "npm start -- --db-address $%s_PORT_27017_TCP_ADDR", 
         config.branch,  // git checkout branch
         config.hostIP, // echo server ip to hostIP
         config.hostIP, config.hostPort, // API_URL: hostIP:hostPort

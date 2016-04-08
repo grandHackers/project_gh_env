@@ -2,12 +2,13 @@
 
 1) Pull images, grandhackers/ubuntu-base:latest, grandhackers/blog:latest, grandhackers/mongo:latest from docker hub  
 (To build each one, just run `docker build <repo/tag:version> <path-to-directory-of-the-Dockerfile>`.  
-for building the 'blog' image, just run the script `node build-app-image.js`)
+for building the 'blog' image, just run the script `node build-app-image.js`)  
 
-2) Run `npm install`  
-3a) To start all, run `npm start`. Also supports stop, restart, and remove.
-3b) Otherwise to start either the app or the db, run `npm run start:app` or `npm run start:db`.  
-Likewise, this also supports other operations.
+2) Run `npm install`    
+3) Specify the ip address of this host under 'app-config.js'.  
+4a) To start all, run `npm start`. Also supports stop, restart, and remove (to run remove, do `npm run remove`)  
+4b) Otherwise to start either the app or the db, run `npm run start:app` or `npm run start:db`.  
+Likewise, this also supports other operations.  
 
 The configuration file for the app and db container is located in config folder.
 
