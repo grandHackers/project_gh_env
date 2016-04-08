@@ -3,6 +3,19 @@ var execSync = require('child_process').execSync
 
 // read app config from some config file
 
+function get_setup_command(config) {
+    return util.format(
+        "git pull; " +  
+        "git checkout %s; " + 
+        "npm update 2>&1; " +
+        "echo updating server ip to %s; " +
+        'echo export default { API_URL: \\"http://%s:%s\\" } > config/client-config.js; ' +
+        "npm start -- --db-address $%s_PORT_27017_TCP_ADDR", 
+        config.branch,  // git checkout branch
+        config.hostIP, // echo server ip to hostIP
+        config.hostIP, config.hostPort, // API_URL: hostIP:hostPort
+        config.link.toUpperCase());         
+}
 
 function start(config) {
     
@@ -14,21 +27,6 @@ function start(config) {
     // docker run -d --name blog -p 8080:8080 --link mongo yoon01/blog:latest /bin/bash -c 'npm start -- --db-address $MONGO_PORT_27017_TCP_ADDR' 
     
     console.log("Starting blog app...");
-        
-    // source cmd; git clone, checkout and npm install
-    // note this gets the latest commit of the specified branch
-    var source_setup_cmd = util.format(
-        "git pull; " +  
-        "git checkout %s; " + 
-        "npm update 2>&1; " +
-        "echo updating server ip to %s; " +
-        'echo export default { API_URL: \\"http://%s:%s\\" } > config/client-config.js; ' +
-        "npm start -- --db-address $%s_PORT_27017_TCP_ADDR", 
-        config.branch,  // git checkout branch
-        config.hostIP, // echo server ip to hostIP
-        config.hostIP, config.hostPort, // API_URL: hostIP:hostPort
-        config.link.toUpperCase()); 
-    
     
     // Spin up docker container
     var run_cmd = util.format(
@@ -39,7 +37,7 @@ function start(config) {
         config.containerPort, 
         config.link, 
 	    config.tag,
-        source_setup_cmd);
+        get_setup_cmd());
     
     // redirect stdout inside container to host stdout and to a log file
     var log_cmd = util.format(
@@ -82,6 +80,10 @@ function remove(config) {
 }
 
 function restart(config) {
+    // TODO 
+    // docker restart currently only supports restarting the container with the same 
+    // command it received before. This should preferably restart by loading the config
+    // file again and with a different command if necessary.
     var name = config.name;
     // Restarts the app container as long as it wasn't removed.
     console.log("Restarting the app (docker container '%s')", name);
