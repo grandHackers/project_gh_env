@@ -46,7 +46,6 @@ function main() {
         { name: 'command', type: String },
         { name: 'app-config-path', type: String },
         { name: 'db-config-path', type: String } ]);
-    console.log('blarg');
     var options = cli.parse()
     
     var appConfigPath = options['app-config-path'];
