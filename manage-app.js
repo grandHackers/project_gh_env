@@ -3,7 +3,7 @@ var execSync = require('child_process').execSync
 
 // read app config from some config file
 
-function get_setup_command(config) {
+function get_setup_cmd(config) {
     return util.format(
         "git pull; " +  
         "git checkout %s; " + 
@@ -18,14 +18,6 @@ function get_setup_command(config) {
 }
 
 function start(config) {
-    
-    // write the pre-setup stuff into a file
-    // just make node 
-    
-    // docker run -d --name mongo -p 27018:27017 -v /data/db:/data/db yoon01/mongo:latest
-    // docker run --name blog -p 8080:8080 --link mongo -it yoon01/blog:latest bash
-    // docker run -d --name blog -p 8080:8080 --link mongo yoon01/blog:latest /bin/bash -c 'npm start -- --db-address $MONGO_PORT_27017_TCP_ADDR' 
-    
     console.log("Starting blog app...");
     
     // Spin up docker container
@@ -36,8 +28,8 @@ function start(config) {
         config.hostPort,
         config.containerPort, 
         config.link, 
-	    config.tag,
-        get_setup_cmd());
+        config.tag,
+        get_setup_cmd(config));
     
     // redirect stdout inside container to host stdout and to a log file
     var log_cmd = util.format(
@@ -134,3 +126,5 @@ module.exports = {
     restart: restart,
     remove: remove
 };
+
+
