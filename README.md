@@ -1,14 +1,25 @@
 # project_gh_env
 
-1) Pull images, grandhackers/ubuntu-base:latest, grandhackers/blog:latest, grandhackers/mongo:latest from docker hub  
-(To build each one, just run `docker build <repo/tag:version> <path-to-directory-of-the-Dockerfile>`.  
-for building the 'blog' image, just run the script `node build-app-image.js`)  
+## Setup Requirements
+Install Docker on the host:  
+https://docs.docker.com/engine/installation/
+Pull docker images, grandhackers/blog and grandhackers/mongo from the docker hub:
+- `docker pull grandhackers/blog:latest`
+- `docker pull grandhackers/mongo:latest`
+Or build each image from a corresponding Dockerfile in 'Dockerfiles' directory. 
 
-2) Run `npm install`    
-3) Specify the ip address of this host under 'app-config.js'.  
-4a) To start all, run `npm start`. Also supports stop, restart, and remove (to run remove, do `npm run remove`)  
-4b) Otherwise to start either the app or the db, run `npm run start:app` or `npm run start:db`.  
-Likewise, this also supports other operations.  
 
-The configuration file for the app and db container is located in config folder.
-
+## To Run the App:
+1. Clone repo from https://github.com/grandHackers/ 
+2. Run `npm install`
+3. Configure settings for each docker container if necessary (already populated with default values).  
+    * For application: config/app-config.js  
+    * For mongoDB service, config/db-config.js) 
+    NOTE:  If the app will be accessed from a different host, then set the 'hostIP' to the correct interface ip instead of localhost.
+    To start the whole application, run `npm start`. 
+4. Or to just run either the application code or the MongoDB server:
+    `npm start:<app | db>`
+    ex) npm start:db  // to start MongoDB server separately
+    (To execute other operations such as stopping, restarting, and removing the service,
+    simply run `npm run < start | stop | restart | remove >[:< app | db >]`)
+5. Open up the browser, and enter in "http://<ip-of-the-docker-host-machine>:<designatedHostPort>" to interact with the application  
