@@ -15,7 +15,6 @@ Or build each image from a corresponding Dockerfile in 'Dockerfiles' directory.
 3. Configure settings for each docker container if necessary (already populated with default values).  
     * For application: config/app-config.js  
     * For mongoDB service, config/db-config.js) 
-    NOTE:  If the app will be accessed from a different host, then set the 'hostIP' to the correct interface ip instead of localhost.
     To start the whole application, run `npm start`. 
 4. Or to just run either the application code or the MongoDB server:
     `npm start:<app | db>`
