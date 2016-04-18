@@ -24,7 +24,7 @@ Or build each image from a corresponding Dockerfile in 'Dockerfiles' directory.
 5. Open up the browser, and enter in "http://<ip-of-the-docker-host-machine>:<designatedHostPort>" to interact with the application  
 
 
-## Editing Configuration File
+## Editing the Configuration File
 ## Common Configuration 
 Specify the following config parameters for both application and database service:
 - **imageTag** :  docker image tag <string>  
