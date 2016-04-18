@@ -5,32 +5,27 @@ function start(config) {
     console.log("Starting mongo service...");
  
     var run_cmd = util.format(
-        "docker run -d --name %s -p %d:%d -v %s:%s %s; ",
-        config.name, 
-        config.hostPort, 
-        config.containerPort, 
-        config.hostDirPath,
-        config.containerDirPath,
-	config.tag
-    );
+        "docker run -d --name %s " + 
+        "-p %d:%d " + 
+        "-v %s:%s " + 
+        " %s ", 
+        config.containerName,
+        config.hostPort, config.containerPort, 
+        config.hostDbDataPath, config.containerDbDataPath,
+	    config.imageTag
+    )
     
-    var log_cmd = util.format(
-        "docker logs --follow %s > log_%s.txt &", 
-        config.name, config.name);
-    
-    var cmd = run_cmd + log_cmd;
-    
-    console.log("Running `%s`", cmd); 
+    var cmd = run_cmd
+    console.log("Running `%s`", cmd)
     try {
-        var res = execSync(cmd, {stdio: [0, 1, 2]});
-        //console.log(res.toString());         
+        var res = execSync(cmd, {stdio: [0, 1, 2]})      
     } catch(error) {
-        console.log(error);
+        console.log(error)
     }
 }
 
 function stop(config) {
-    var name = config.name;
+    var name = config.containerName;
     // stops the db with the container name
     console.log("Stopping the db (docker container name '%s')", name); 
     try {
@@ -42,7 +37,7 @@ function stop(config) {
 }
 
 function remove(config) {
-    var name = config.name;    
+    var name = config.containerName;    
     console.log("Removing the db (docker container '%s')", name);
     try {
         execSync('docker rm ' + name, {stdio: [0, 1, 2]});
@@ -53,7 +48,7 @@ function remove(config) {
 }
 
 function restart(config) {
-    var name = config.name    
+    var name = config.containerName    
     // Restarts the db container as long as it wasn't removed.
     console.log("Restarting the db (docker container '%s')", name);
     try {
