@@ -4,52 +4,6 @@ var path = require('path')
 var fs = require('fs')
 var execSync = require('child_process').execSync
 
-// Food for thought (TODO later?)
-// maybe for the main process that is passed in with run command,
-// perform a tail of some log file
-// then do docker cp of a script that starts all these commands?
-// (wondering if you can copy this script to a stopped container)
-// and run the command 
-// read app config from some config file
-
-function get_setup_cmd(config) {
-    
-    var logFilename = util.format(
-        "log_blog_%d.txt", Math.round(new Date().getTime()/1000) ) 
-    var logPath = "logs/" + logFilename
-    
-    var gitPullCmd = "git pull >> " + logPath
-    var gitCheckoutCmd = util.format("git checkout %s >> %s", 
-        config.codeBranch, logPath) 
-    var npmUpdateCmd = util.format("npm update >> %s 2>&1", logPath)
-    var npmStartCmd = util.format("npm start -- --db-address $%s_PORT_27017_TCP_ADDR >> %s 2>&1",
-        config.linkToDBContainer.toUpperCase(), logPath)
-    
-    return util.format(
-        // git pull 
-        "echo \"Pulling and checkout the latest branch\" >> %s; " +
-        "echo \"%s\" >> %s; " + 
-        "%s; " + 
-        // git checkout
-        "echo \"%s\" >> %s; " + 
-        "%s; " +
-        // npm update
-        "echo \"Update npm packages...\" >> %s; " +
-        "echo \"%s\" >> %s; " + 
-        "%s; " + 
-        // npm start
-        "echo \"Starting the application...\" >> %s; " +
-        "echo \"%s\" >> %s; " +
-        "%s ",
-        
-        logPath, gitPullCmd, logPath, gitPullCmd,
-        gitCheckoutCmd, logPath, gitCheckoutCmd,
-        logPath, npmUpdateCmd, logPath, npmUpdateCmd,
-        logPath, npmStartCmd, logPath, npmStartCmd
-    );
-       
-}
-
 function start(config) {
     // Resolve log path on host
     if (!path.isAbsolute(config.hostLogPath)) {
@@ -65,20 +19,20 @@ function start(config) {
             proc.exit(-1);
         }
     }
-        
     console.log("Starting blog app...");
     var run_cmd = util.format(
         "docker run -d --name %s -p %d:%d " + // container name, host and container port
         "-v %s:/work/project_gh_blog/logs " +  // log path on host
         "--link %s " + // link to db 
-        "%s /bin/bash -c '%s'; ", // image tag and command
+        "%s /bin/bash -c" +  // image tag
+        " 'npm start -- --db-address $%s_PORT_27017_TCP_ADDR' ",   
         config.containerName,
         config.hostPort,
         config.containerPort,
         config.hostLogPath, 
         config.linkToDBContainer,  
         config.imageTag,
-        get_setup_cmd(config));
+        config.linkToDBContainer.toUpperCase() );
     
     var cmd = run_cmd;
     console.log("Running `%s`", cmd);
