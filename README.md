@@ -44,6 +44,8 @@ Specify the following config parameters:
     ex) linkToDbContainer: 'mongo'
 - **codeBranch** : name of the git branch to checkout <string>
     ex) codeBranch: 'master'
+    NOTE) currently setting this field doesn't do anything.
+    Will be handled in the future.
 - **apiURL** : url of the api <string>
     Default: ''
 - **dbName** : name of the mongodb database to connect to <string>
