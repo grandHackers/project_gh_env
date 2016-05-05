@@ -6,4 +6,6 @@ module.exports = {
     linkToDBContainer: 'mongo',
     hostLogPath: './logs',
     codeBranch: 'master',
+    apiUrl: '/gh/blog',
+    dbName: 'blog'
 };

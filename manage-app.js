@@ -19,27 +19,28 @@ function start(config) {
             proc.exit(-1);
         }
     }
-    console.log("Starting blog app...");
+    
+    console.log("Starting blog app...")
+    
     var run_cmd = util.format(
         "docker run -d --name %s -p %d:%d " + // container name, host and container port
-        "-v %s:/work/project_gh_blog/logs " +  // log path on host
-        "--link %s " + // link to db 
-        "%s /bin/bash -c" +  // image tag
-        " 'npm start -- --db-address $%s_PORT_27017_TCP_ADDR' ",   
+        "--link %s " + // link to db
+        "-e API_URL='%s' " + 
+        "-e DB_NAME='%s' " + 
+        "%s /bin/bash -c " +  // image tag
+        "'npm start'",   
         config.containerName,
         config.hostPort,
         config.containerPort,
-        config.hostLogPath, 
-        config.linkToDBContainer,  
-        config.imageTag,
-        config.linkToDBContainer.toUpperCase() );
+        config.linkToDBContainer,
+        config.apiURL,
+        config.dbName,  
+        config.imageTag);
     
     var cmd = run_cmd;
     console.log("Running `%s`", cmd);
     try {
-        execSync(cmd, {stdio: [0, 1, 2]});
-        // var res = execSync(run_cmd);
-        // console.log(res.toString());                
+        execSync(cmd, {stdio: [0, 1, 2]});            
     } catch(error) {
         console.log(error);                
     }   
