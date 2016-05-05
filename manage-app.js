@@ -5,23 +5,7 @@ var fs = require('fs')
 var execSync = require('child_process').execSync
 
 function start(config) {
-    // Resolve log path on host
-    if (!path.isAbsolute(config.hostLogPath)) {
-        config.hostLogPath = path.join(
-            proc.cwd(), config.hostLogPath)            
-    }
-    // Create a directory if it doesn't already exist
-    if (!fs.existsSync(config.hostLogPath)){
-        try {
-            fs.mkdirSync(config.hostLogPath);    
-        } catch (error) {
-            console.log(error)
-            proc.exit(-1);
-        }
-    }
-    
     console.log("Starting blog app...")
-    
     var run_cmd = util.format(
         "docker run -d --name %s -p %d:%d " + // container name, host and container port
         "--link %s " + // link to db
