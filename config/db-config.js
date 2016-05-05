@@ -5,5 +5,4 @@ module.exports = {
     containerPort: 27017,
     hostDbDataPath: '/data/db',
     containerDbDataPath: '/data/db',
-    hostLogPath: './logs'
 };
