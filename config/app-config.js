@@ -5,6 +5,7 @@ module.exports = {
     containerPort: 8080,
     linkToDBContainer: 'mongo',
     codeBranch: 'master',
-    apiURL: '',
+    subDirURL: '/gh/blog',
+    apiURL: '/api',
     dbName: 'blog'
 };
