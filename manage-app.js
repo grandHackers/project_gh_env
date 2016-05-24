@@ -11,7 +11,10 @@ function start(config) {
         "--link %s " + // link to db
         "-e SUBDIR_URL='%s' " +
         "-e API_URL='%s' " + 
-        "-e DB_NAME='%s' " + 
+        "-e DB_NAME='%s' " +
+        "-e GOOGLE_CLIENT_ID='%s' " +
+        "-e GOOGLE_CLIENT_SECRET='%s' " +
+        "-e GOOGLE_REDIRECT_URL='%s' " +  
         "%s /bin/bash -c " +  // image tag
         "'npm start'",   
         config.containerName,
@@ -20,7 +23,10 @@ function start(config) {
         config.linkToDBContainer,
         config.subDirURL,
         config.apiURL,
-        config.dbName,  
+        config.dbName,
+        config.googleAuth.clientID,
+        config.googleAuth.clientSecret,
+        config.googleAuth.redirectURL,
         config.imageTag);
     
     var cmd = run_cmd;
