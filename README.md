@@ -28,30 +28,33 @@ Or build each image from a corresponding Dockerfile in 'Dockerfiles' directory.
 ## Common Configuration 
 Specify the following config parameters for both application and database service:
 - **imageTag** :  docker image tag <string>  
-    ex) imageTag: "grandhackers/blog:latest"
-- **containerName** : name to assign to the container <string>
-    ex) containerName: 'blog'
-- **hostPort** : port number of the host to map <integer>
-    ex) hostPort: 8080
-- **containerPort** : port number of the container to bind <integer>
-    ex) containerPort: 8080
-    (Note: Should bind to the container port that is exposed on the container - 
+    Default: "grandhackers/blog:latest"
+- **containerName** : name to assign to the container <string>  
+    Default: 'blog'
+- **hostPort** : port number of the host to map <integer>  
+    Default: 8080
+- **containerPort** : port number of the container to bind <integer>  
+    Default: 8080  
+    (Note: Should bind to the container port that is exposed on the container -   
     8080 for application, 27017 for database) 
-- **hostLogPath** : absolute or relative path the generated log file(s) will be saved to <string>
-    ex) hostLogPath: './logs'  or hostLogPath: '/usr/ubuntu/var/logs'    
-    (Note: The corresponding directory structure will be made if the path does not exist but is valid.)
 
-### Application Service Configuration ('config/app-config.js')
+### Configuration specific to the Application ('config/app-config.js')
 Specify the following config parameters:
 - **linkToDbContainer** : link name to the running docker container with the db daemon <string>
-    ex) linkToDbContainer: 'mongo'
-- **codeBranch** : name of the git branch to checkout from <string>
-    ex) codeBranch: 'master'
+    ex) linkToDbContainer: 'mongo'  
+- **codeBranch** : name of the git branch to checkout <string>
+    ex) codeBranch: 'master'  
+    NOTE) currently setting this field doesn't do anything.  
+    Will be handled in the future.  
+- **apiURL** : url of the api <string>
+    Default: ''  
+- **dbName** : name of the mongodb database to connect to <string>
+    Default: 'blog'      
 
-### Database Service Configuration ('config/db-config.js')
+### Configuration specific to the Database ('config/db-config.js')
 Specify the following config parameters:
-- **hostDbDataPath** : existing absolute path the data files will be saved to on the host <string>
-    ex) hostDbDataPath: '/data/db'
+- **hostDbDataPath** : existing absolute path the data files will be saved to on the host <string>  
+    ex) hostDbDataPath: '/data/db'  
     (Note: TODO - should also accept a relative path and should also accept non-existing path and create it if valid)
-- **containerDbDataPath**: absolute path the data files will be saved on the container <string>
-    ex) containerDbDataPath: '/data/db'
+- **containerDbDataPath**: absolute path the data files will be saved on the container <string>  
+    ex) containerDbDataPath: '/data/db'  
