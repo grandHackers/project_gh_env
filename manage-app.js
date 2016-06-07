@@ -9,11 +9,9 @@ function start(config) {
     var run_cmd = util.format(
         "docker run -d --name %s -p %d:%d " + // container name, host and container port
         "--link %s " + // link to db
-        "-e SUBDIR_URL='%s' " +
+        "-e BASE_URL='%s' " +
         "-e API_URL='%s' " + 
         "-e DB_NAME='%s' " +
-        "-e GOOGLE_CLIENT_ID='%s' " +
-        "-e GOOGLE_CLIENT_SECRET='%s' " +
         "-e GOOGLE_REDIRECT_URL='%s' " +  
         "%s /bin/bash -c " +  // image tag
         "'npm start'",   
@@ -21,11 +19,9 @@ function start(config) {
         config.hostPort,
         config.containerPort,
         config.linkToDBContainer,
-        config.subDirURL,
+        config.baseURL,
         config.apiURL,
         config.dbName,
-        config.googleAuth.clientID,
-        config.googleAuth.clientSecret,
         config.googleAuth.redirectURL,
         config.imageTag);
     
